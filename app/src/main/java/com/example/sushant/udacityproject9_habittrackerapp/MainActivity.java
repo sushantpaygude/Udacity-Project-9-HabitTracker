@@ -17,11 +17,13 @@ TextView textView;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        textView=(TextView)findViewById(R.id.textView);
         DatabaseHelper databaseHelper=new DatabaseHelper(getApplicationContext());
         SQLiteDatabase db=databaseHelper.getWritableDatabase();     //Allows read and write
         insertData(db);
-        readData(db,databaseHelper);
+     Cursor cursor=readData(db,databaseHelper);
+        displayData(cursor);
+
 
     }
     public void insertData(SQLiteDatabase db){
@@ -40,15 +42,14 @@ TextView textView;
         contentValues.put(HabitTrackerContract.HabitEntry.COLUMN_HABIT_DURATION,"2 hours");
         contentValues.put(HabitTrackerContract.HabitEntry.COLUMN_HABIT_STATUS,0);
         newRowId=db.insert(HabitTrackerContract.HabitEntry.TABLE_NAME,null,contentValues);
-        Log.e("DATA:","IS:"+newRowId);
         contentValues.clear();
 
     }
 
-    public void readData(SQLiteDatabase db,DatabaseHelper databaseHelper){
+    public Cursor readData(SQLiteDatabase db,DatabaseHelper databaseHelper){
         db=databaseHelper.getReadableDatabase();
 
-    textView=(TextView)findViewById(R.id.textView);
+
         String[] projections={HabitTrackerContract.HabitEntry.COLUMN_HABIT_NAME,    //Projections is used to specify the columns to the cursor object
                 HabitTrackerContract.HabitEntry.COLUMN_HABIT_TIME,
                 HabitTrackerContract.HabitEntry.COLUMN_HABIT_DURATION,
@@ -61,7 +62,12 @@ TextView textView;
                 null,
                 null,
                 null);
+        return cursor;
 
+
+    }
+
+    public void displayData(Cursor cursor){ //Displaying the results of the cursor object returned by the readData() method
         try {
             int nameColumnIndex = cursor.getColumnIndex(HabitTrackerContract.HabitEntry.COLUMN_HABIT_NAME);
             int timeColumnIndex = cursor.getColumnIndex(HabitTrackerContract.HabitEntry.COLUMN_HABIT_TIME);
