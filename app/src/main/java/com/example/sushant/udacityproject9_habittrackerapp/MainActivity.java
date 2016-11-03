@@ -12,20 +12,19 @@ import com.example.sushant.udacityproject9_habittrackerapp.Contracts.DatabaseHel
 import com.example.sushant.udacityproject9_habittrackerapp.Contracts.HabitTrackerContract;
 
 public class MainActivity extends AppCompatActivity {
-TextView textView;
+private TextView textView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textView=(TextView)findViewById(R.id.textView);
+         textView=(TextView)findViewById(R.id.textView);
         DatabaseHelper databaseHelper=new DatabaseHelper(getApplicationContext());
         SQLiteDatabase db=databaseHelper.getWritableDatabase();     //Allows read and write
         insertData(db);
-     Cursor cursor=readData(db,databaseHelper);
+        Cursor cursor=readData(db,databaseHelper);
         displayData(cursor);
-
-
     }
+
     public void insertData(SQLiteDatabase db){
         long newRowId;
 
@@ -81,9 +80,11 @@ TextView textView;
                 int currentStatus = cursor.getInt(statusColumnIndex);
                 textView.append("\n" + "--" + currentName + "--" + currentTime + "--" + currentDuration + "--" + currentStatus);
             }
-        }catch (Exception e){}
+        }catch (Exception e){
 
-        finally {
+        }
+
+        finally{
             cursor.close();
         }
     }
